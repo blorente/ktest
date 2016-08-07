@@ -18,6 +18,8 @@ struct TestCase {
 };
 
 extern TestCase tests[];
+
+// These have to be implemented in the file using it
 extern void print(const char *msg);
 extern void print(const char *msg, int a, int b, const char *extra);
 extern void runTests();
