@@ -13,16 +13,17 @@ namespace Tests {
 #define TEST_CASE_END_SUITE() { "\0", nullptr }
 
 struct TestCase {
-	char *name;
+	const char *name;
 	bool (*testFunction)(void);
 };
 
 extern TestCase tests[];
 
+extern void runTests();
+
 // These have to be implemented in the file using it
 extern void print(const char *msg);
 extern void print(const char *msg, int a, int b, const char *extra);
-extern void runTests();
 
 } // End of namespace KWorks::Tests
 } // End of namespace KWorks
