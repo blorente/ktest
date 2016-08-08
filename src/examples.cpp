@@ -45,6 +45,37 @@ DEF_TEST(test_assert_eq,
 	ASSERT_EQUALS((1 + 1), 2);
 )
 
+struct PointerTestTarget {
+	int a;
+	int b;
+
+	PointerTestTarget(int a, int b) : a(a), b(b) {}
+	~PointerTestTarget() {}
+};
+
+struct BasicMock {
+	int i;
+	PointerTestTarget *j;
+};
+
+DEF_MOCK_SETUP(basic_mock, BasicMock,
+	target.i = 2;
+	target.j = new PointerTestTarget(0, 3);
+)
+
+DEF_MOCK_TEARDOWN(basic_mock, BasicMock,
+	delete target.j;
+)
+
+DEF_TEST(mock_setup_and_teardown,
+	BasicMock basicMock;
+	MOCK_SETUP(basic_mock, basicMock);
+	ASSERT_TRUE(basicMock.i == 2);
+	ASSERT_TRUE(basicMock.j->a == 0);
+	ASSERT_TRUE(basicMock.j->b == 3);
+	MOCK_TEARDOWN(basic_mock, basicMock);
+)
+
 TestCase tests[] = {
 	// Framework tests
 	TEST_CASE("Dummy", dummy),
@@ -54,6 +85,7 @@ TestCase tests[] = {
 	TEST_CASE("This is supposed to fail", failing_test),
 	TEST_CASE("One is different than two", test_assert_false),
 	TEST_CASE("One plus one is still two", test_assert_eq),
+	TEST_CASE("We can assign values in mocks", mock_setup_and_teardown),
 	TEST_CASE_END_SUITE()
 };
 
